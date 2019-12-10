@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<script>
+
+		const {
+			dialog
+		} = require('electron').remote;
+
+		const {
+			ipcRenderer
+		} = require('electron');
+		var fs = require('fs');
+
+
+	</script>
+	<script src="js/index.js"></script>
+	<script src="js/utils.js"></script>
+	<meta charset="UTF-8">
+	<title>Do u know da wae</title>
+	<!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" /> -->
+</head>
+
+<body>
+
+	<div id="walletclosed">
+
+		<input type="button" id="clickme" value="clickme" onclick="testFunc('ping');" />
+
+		<input type="password" name="Wallet Password" id="pw" />
+
+		<input type="button" id="btnEd" value="Create Wallet" onclick="newWallet('test.wallet', 'test')" />
+
+		<input type="button" id="openBtn" value="Open Wallet from File" />
+
+	</div>
+
+	<div id="walletopen" style="display:none">
+
+		<input type="button" id="btnEd" value="Show Wallet Address"
+			onclick="walletAddrs(wallet.wallet.getPrimaryAddress)" />
+
+	</div>
+
+	<div id="logger" style="display:none">
+
+		<input type="button" id="btnEd" value="Hide Log"
+		onclick="show('notlog', 'logger')" />
+
+		<samp id="log"></samp>
+
+	</div>
+
+	<div id="notlog" style="display:none">
+
+		<input type="button" id="btnEd" value="Show Log"
+		onclick="show('logger', 'notlog')" />
+
+	</div>
+
+	<script>
+		console.log("im gay");
+
+		document.querySelector('#openBtn').addEventListener('click', function (event) {
+			dialog.showOpenDialog({
+				properties: ['openFile']
+			}).then(result => {
+				console.log(result.canceled)
+				console.log(result.filePaths[0])
+				if(!result.canceled) {
+
+					openWallet(result.filePaths[0], document.getElementById("pw").value)
+					return show('walletopen','walletclosed');
+				}
+			}).catch(err => {
+				console.log(err)
+			})
+		});
+
+	</script>
+
+</body>
+
+</html>
