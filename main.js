@@ -114,7 +114,42 @@ app.on('activate', () => {
 
 //Handler fur IPC
 
-ipcMain.on('asynchronous-message', (event, arg) => {
-	console.log(arg) // prints Message output
-	event.reply('asynchronous-reply', 'pong') // responds with 'pong'
+ipcMain.on('openwallet', (event, arg) => {
+
+	try {
+		if (arg[0] === 0) {
+			wallet = new Wallet(false, arg[1], arg[2], backendconf.nodes, backendconf)
+		} else {
+			wallet = new Wallet(true, arg[1], arg[2], backendconf.nodes, backendconf)
+		}
+	} catch (e) {
+		event.reply('logger', "Wallet not opened:<br />" + e)
+		event.reply('openwallet-reply', false) // responds with 'pong'
+	} finally {
+		event.reply('logger', 'Wallet opened') // responds with 'pong' to the logger
+		event.reply('openwallet-reply', true) // responds with 'pong'
+		event.reply('addrs', wallet.walletAddress)
+	}
+
+})
+
+ipcMain.on('trans', (event, arg) => {
+	wallet.sendBasicTransaction(arg[0], arg[1], arg[2])
+})
+
+ipcMain.on('rescan', (event, arg) => {
+	wallet.reset(0)
+})
+
+ipcMain.on('balance', (event, arg) => {
+	event.reply('balance', wallet.wallet.getBalance())
+})
+
+ipcMain.on('updatesync',(event, arg) => {
+	event.reply('updatesync', wallet.syncStatus)
+})
+
+ipcMain.on('close', async (event, arg) => {
+	await wallet.stopAndSave()
+	event.reply('close', '')
 })

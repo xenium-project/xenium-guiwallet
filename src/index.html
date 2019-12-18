@@ -3,7 +3,6 @@
 
 <head>
 	<script>
-
 		const {
 			dialog
 		} = require('electron').remote;
@@ -12,25 +11,22 @@
 			ipcRenderer
 		} = require('electron');
 		var fs = require('fs');
-
+		const remote = require('electron').remote
 
 	</script>
 	<script src="js/index.js"></script>
 	<script src="js/utils.js"></script>
 	<meta charset="UTF-8">
-	<title>Do u know da wae</title>
+	<title>Xenium GUI Wallet</title>
 	<!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" /> -->
 </head>
 
 <body>
 
 	<div id="walletclosed">
+		<p>Password: </p><input type="password" name="Wallet Password" id="pw" />
 
-		<input type="button" id="clickme" value="clickme" onclick="testFunc('ping');" />
-
-		<input type="password" name="Wallet Password" id="pw" />
-
-		<input type="button" id="btnEd" value="Create Wallet" onclick="newWallet('test.wallet', 'test')" />
+		<!--<input type="button" id="btnEd" value="Create Wallet" onclick="newWallet('test.wallet', 'test')" />-->
 
 		<input type="button" id="openBtn" value="Open Wallet from File" />
 
@@ -38,24 +34,76 @@
 
 	<div id="walletopen" style="display:none">
 
-		<input type="button" id="btnEd" value="Show Wallet Address"
-			onclick="walletAddrs(wallet.wallet.getPrimaryAddress)" />
+		<div>
+			<h3>Syncstatus: </h3>
+			<h3 id="sync"></h3>
+		</div>
+
+		<h4 id="walletaddr">Wallet address:<br /></h4>
+		<button id="rescan">Rescan Wallet</button>
+		<p>Amount: </p><input type="number" name="Amount" id="amount" />
+		<p>Payment ID: </p><input type="text" name="Payment ID" id="id" />
+		<p>Address: </p><input type="text" name="Address" id="address" />
+		<input type="button" id="trans" value="Send Transaction" />
+
+		<br /><br />
+
+		<div>
+			<button id="balanceu">Update Balance</button>
+			<h3> Balance: </h3>
+			<h3 id="balance"><br /></h3>
+		</div>
+
+		<br /><br />
+
+		<button id="close">Close & Save</button>
+
+		<br /><br />
 
 	</div>
 
 	<div id="logger" style="display:none">
 
-		<input type="button" id="btnEd" value="Hide Log"
-		onclick="show('notlog', 'logger')" />
+		<input type="button" id="btnEd" value="Hide Log" onclick="show('notlog', 'logger')" />
 
-		<samp id="log"></samp>
+		<samp id="log"><br />
+			MMMMMMMMMMMMMMMMMMMNmdhyssoooooooossyhdmNMMMMMMMMMMMMMMMMMMM<br />
+			MMMMMMMMMMMMMMMNdysoooooooooooooooooooooosydNMMMMMMMMMMMMMMM<br />
+			MMMMMMMMMMMMmhsooooooooooooooooooooooooooooooshmMMMMMMMMMMMM<br />
+			MMMMMMMMMNdsoooooooooooooooooooooooooooooooooooosdNMMMMMMMMM<br />
+			MMMMMMMNhoooo:-----:ooooooooooooooooooooo:-----/ooohNMMMMMMM<br />
+			MMMMMMdooooooo/-....-+ooooooooooooooooo+-....:+oooooodMMMMMM<br />
+			MMMMNyooooooooo+-....-/ooooooooooooooo:....-/oooooooooyNMMMM<br />
+			MMMNsoooooooooooo:.....:+ooooooooooo+-....-+ooooooooooosmMMM<br />
+			MMNsoooooooooooooo+-....-/ooooooooo:....-/oooooooooooooosNMM<br />
+			MNsooooooooooooooooo:.....:oooooo+-....-+oooooooooooooooosNM<br />
+			Myooooooooooooooooooo/-....-+ooo:....-/oooooooooooooooooooyM<br />
+			mooooooooooooooooooooo+-....-/+-....-+ooooooooooooooooooooom<br />
+			yooooooooooooooooooooooo/-....-...-/oooooooooooooooooooooooy<br />
+			ooooooooooooooooooooooooo+-......-+ooooooooooooooooooooooooo<br />
+			oooooooooooooooooooooooooo:......:oooooooooooooooooooooooooo<br />
+			oooooooooooooooooooooooo+-........-/oooooooooooooooooooooooo<br />
+			ooooooooooooooooooooooo/-..../:.....:ooooooooooooooooooooooo<br />
+			yoooooooooooooooooooo+-....-+oo/-....-+ooooooooooooooooooooy<br />
+			mooooooooooooooooooo/-....:+oooo+-...../ooooooooooooooooooom<br />
+			Myoooooooooooooooo+-....-/oooooooo:.....-+ooooooooooooooooyM<br />
+			MNsoooooooooooooo/-....-+oooooooooo/-....-/oooooooooooooosNM<br />
+			MMNsooooooooooo+-...../ooooooooooooo+:.....:+ooooooooooosNMM<br />
+			MMMNsooooooooo/-....-+oooooooooooooooo/-....-/ooooooooosmMMM<br />
+			MMMMNyoooooo+:.....:ooooooooooooooooooo+-.....:oooooooyNMMMM<br />
+			MMMMMMdoooo/-....-+oooooooooooooooooooooo:.....-+oooodMMMMMM<br />
+			MMMMMMMMhoo++++++ooooooooooooooooooooooooo+++++++oohMMMMMMMM<br />
+			MMMMMMMMMMdsoooooooooooooooooooooooooooooooooooosdMMMMMMMMMM<br />
+			MMMMMMMMMMMMmhsooooooooooooooooooooooooooooooshmMMMMMMMMMMMM<br />
+			MMMMMMMMMMMMMMMNdysoooooooooooooooooooooosydNMMMMMMMMMMMMMMM<br />
+			Xenium WalletMMMMMMNmdhyssoooooooossyhdmNMMMMMMMMMMMMMMMMMMM
+		</samp>
 
 	</div>
 
-	<div id="notlog" style="display:none">
+	<div id="notlog">
 
-		<input type="button" id="btnEd" value="Show Log"
-		onclick="show('logger', 'notlog')" />
+		<input type="button" id="btnEd" value="Show Log" onclick="show('logger', 'notlog')" />
 
 	</div>
 
@@ -68,14 +116,33 @@
 			}).then(result => {
 				console.log(result.canceled)
 				console.log(result.filePaths[0])
-				if(!result.canceled) {
+				if (!result.canceled) {
 
 					openWallet(result.filePaths[0], document.getElementById("pw").value)
-					return show('walletopen','walletclosed');
+					return;
 				}
 			}).catch(err => {
 				console.log(err)
 			})
+		});
+
+		document.querySelector('#balanceu').addEventListener('click', function (event) {
+			ipcRenderer.send('balance', '')
+		});
+
+		document.querySelector('#rescan').addEventListener('click', function (event) {
+			ipcRenderer.send('rescan', '')
+		});
+
+		document.querySelector('#close').addEventListener('click', function (event) {
+			ipcRenderer.send('close', '')
+		});
+
+		document.querySelector('#trans').addEventListener('click', function (event) {
+			var trans = [document.getElementById("address").value, document.getElementById("amount").value, document
+				.getElementById("id").value
+			];
+			ipcRenderer.send('trans', trans)
 		});
 
 	</script>
